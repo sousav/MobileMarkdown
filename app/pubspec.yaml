@@ -1,0 +1,25 @@
+name: mobile_markdown
+description: "A free, no-ads markdown viewer for Android and iOS."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+  markdown_widget: ^2.3.2      # Markdown rendering with syntax highlighting
+  file_picker: ^8.0.0           # Cross-platform file selection
+  share_handler: ^0.0.21        # Receive files from share sheet
+  path_provider: ^2.1.0         # Platform directories
+  url_launcher: ^6.2.0          # Open links from markdown
+  shared_preferences: ^2.2.0    # Store recent files list
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
