@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
@@ -6,7 +7,8 @@ import 'screens/viewer_screen.dart';
 import 'services/share_receiver.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const MobileMarkdownApp());
 }
 
@@ -111,6 +113,7 @@ class _MobileMarkdownAppState extends State<MobileMarkdownApp> {
         _themeMode = _themeModeFromString(saved);
       });
     }
+    FlutterNativeSplash.remove();
   }
 
   Future<void> _setThemeMode(ThemeMode mode) async {
