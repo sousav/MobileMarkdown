@@ -56,7 +56,21 @@ MobileMarkdown does for `.md` files what a PDF reader does for PDFs: open them, 
 
 **Status: v1.0 implementation complete.**
 
+- `flutter analyze`: 0 issues
+- `flutter test`: 21/21 passing
+- Custom app icon and splash screen configured
+- CI via GitHub Actions (analyze + test + format)
+
 ## Building
+
+The Flutter app source code lives in the `app/` subdirectory. Documentation remains at the repository root in `docs/`.
+
+### Requirements
+- Flutter 3.38+ (stable channel)
+- Android SDK (for Android builds)
+- Xcode 15+ (for iOS builds)
+
+### Development
 
 ```bash
 cd app
@@ -64,20 +78,63 @@ flutter pub get
 flutter run
 ```
 
-The Flutter app source code lives in the `app/` subdirectory. Documentation remains at the repository root in `docs/`.
-
-### Requirements
-- Flutter 3.38+ (stable channel)
-- Android SDK (for Android builds)
-- Xcode (for iOS builds)
-
 ### Running tests
+
 ```bash
 cd app
-flutter test
-flutter analyze
+flutter test                              # Unit + widget tests
+flutter analyze                           # Static analysis
+dart format --set-exit-if-changed lib/     # Format check
+flutter test integration_test             # Integration tests (requires device)
+```
+
+### Release builds
+
+**Android:**
+```bash
+# 1. Copy app/android/key.properties.example to app/android/key.properties
+# 2. Fill in your keystore credentials
+# 3. Build:
+cd app
+flutter build appbundle   # For Play Store (AAB)
+flutter build apk         # For sideloading (APK)
+```
+
+**iOS:**
+```bash
+cd app
+flutter build ipa --no-codesign    # Unsigned (for manual signing)
+flutter build ipa                   # Signed (requires provisioning profile)
+```
+
+## Project Structure
+
+```
+MobileMarkdown/
+  docs/                         # Research, planning, and technical docs
+  app/                          # Flutter application
+    lib/
+      main.dart                 # App entry, ThemeController, routing
+      screens/
+        home_screen.dart        # File picker, recent files, About dialog
+        viewer_screen.dart      # Markdown rendering, share, error states
+      services/
+        file_service.dart       # File I/O, recent files (SharedPrefs)
+        share_receiver.dart     # Cold/warm start intent handling
+      widgets/
+        empty_state.dart        # "No recent files" placeholder
+        recent_file_tile.dart   # Dismissible recent file entry
+      theme/
+        app_theme.dart          # Material 3 light/dark ThemeData
+        markdown_theme.dart     # Custom markdown rendering configs
+    test/                       # Unit + widget tests (21 tests)
+    integration_test/           # Integration tests (device required)
+    assets/                     # App icon source PNGs
+  scripts/
+    generate_icon.py            # Icon generator (Pillow)
+  .github/workflows/ci.yml     # GitHub Actions CI
 ```
 
 ## License
 
-MIT
+MIT - see [LICENSE](LICENSE)
