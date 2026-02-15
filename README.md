@@ -54,7 +54,29 @@ MobileMarkdown does for `.md` files what a PDF reader does for PDFs: open them, 
 
 ## Project Status
 
-**Phase: Planning complete. Ready for implementation.**
+**Status: v1.0 implementation complete.**
+
+## Building
+
+```bash
+cd app
+flutter pub get
+flutter run
+```
+
+The Flutter app source code lives in the `app/` subdirectory. Documentation remains at the repository root in `docs/`.
+
+### Requirements
+- Flutter 3.38+ (stable channel)
+- Android SDK (for Android builds)
+- Xcode (for iOS builds)
+
+### Running tests
+```bash
+cd app
+flutter test
+flutter analyze
+```
 
 ## License
 
