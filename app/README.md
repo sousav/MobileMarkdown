@@ -1,16 +1,42 @@
-# mobile_markdown
+# MobileMarkdown App
 
-A new Flutter project.
+Flutter app for MobileMarkdown.
 
-## Getting Started
+It opens local Markdown files, renders them cleanly on Android and iOS, and stays offline by default.
 
-This project is a starting point for a Flutter application.
+## Core Features
 
-A few resources to get you started if this is your first Flutter project:
+- Open `.md`, `.markdown`, and `.txt` files from the file picker
+- Handle direct file opens and share-sheet imports
+- Render CommonMark and GitHub Flavored Markdown with syntax highlighting
+- Keep recent files and theme preference on device
+- Copy markdown contents from the viewer
+- Avoid ads, analytics, accounts, and network fetches
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Common Commands
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Run these from the `app/` directory:
+
+```bash
+flutter pub get
+flutter run
+flutter test
+flutter test integration_test/app_test.dart -d macos
+flutter build appbundle --release
+flutter build ios --release --no-codesign
+```
+
+## Important Paths
+
+- `lib/` app source
+- `test/` unit and widget tests
+- `integration_test/` app smoke tests
+- `android/key.properties.example` Android signing template
+- `ios/Flutter/Signing.xcconfig.example` iOS signing template
+- `../to-prod-checklist.md` production checklist
+- `../store/listing.md` store listing copy
+
+## Project
+
+- Repository: `https://github.com/sousav/MobileMarkdown`
+- License: MIT

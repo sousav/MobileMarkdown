@@ -54,6 +54,7 @@ void main() {
       expect(find.text('MobileMarkdown'), findsWidgets);
       expect(find.text('1.0.0'), findsOneWidget);
       expect(find.text('A free, no-ads markdown viewer.'), findsOneWidget);
+      expect(find.text('GitHub repository'), findsOneWidget);
     });
   });
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/file_service.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/recent_file_tile.dart';
@@ -112,6 +113,28 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadRecentFiles();
   }
 
+  Future<void> _openProjectPage() async {
+    final uri = Uri.parse('https://github.com/sousav/MobileMarkdown');
+
+    try {
+      final launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open the GitHub repository')),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open the GitHub repository')),
+        );
+      }
+    }
+  }
+
   void _showAboutDialog() {
     showAboutDialog(
       context: context,
@@ -123,6 +146,18 @@ class _HomeScreenState extends State<HomeScreen> {
         const Text('A free, no-ads markdown viewer.'),
         const SizedBox(height: 8),
         const Text('Open source \u2014 MIT License'),
+        const SizedBox(height: 12),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              _openProjectPage();
+            },
+            icon: const Icon(Icons.open_in_new),
+            label: const Text('GitHub repository'),
+          ),
+        ),
       ],
     );
   }

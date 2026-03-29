@@ -60,9 +60,9 @@ Release only when every blocker is green.
   - `app/ios/ShareExtension/Info.plist` currently advertises images, movies, URLs, and generic data.
   - The app mostly handles markdown, text files, and shared text.
 
-- [ ] Fix known doc and UX drift.
-  - `app/README.md` is still the default Flutter starter README.
-  - The About dialog in `app/lib/screens/home_screen.dart` still lacks the planned GitHub link.
+- [x] Fix known doc and UX drift.
+  - Replaced the starter `app/README.md` with project-specific app docs.
+  - Added the GitHub repository link to the About dialog in `app/lib/screens/home_screen.dart`.
 
 - [ ] Strengthen tests around critical paths.
   - Add real `FileService` coverage for file I/O, recents cleanup, and error handling.

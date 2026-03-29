@@ -55,6 +55,21 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
       expect(find.byIcon(Icons.info_outline), findsOneWidget);
     });
+
+    testWidgets('about dialog shows GitHub repository link', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MobileMarkdownApp());
+      await tester.pump(const Duration(milliseconds: 100));
+
+      final aboutButton = tester.widget<IconButton>(
+        find.widgetWithIcon(IconButton, Icons.info_outline),
+      );
+      aboutButton.onPressed!.call();
+      await tester.pumpAndSettle();
+
+      expect(find.text('GitHub repository'), findsOneWidget);
+    });
   });
 
   group('EmptyState widget', () {
