@@ -120,8 +120,8 @@ void main() {
       // Rendered heading
       expect(find.text('Test Heading'), findsOneWidget);
 
-      // Share button present
-      expect(find.byIcon(Icons.share), findsOneWidget);
+      // Copy button present
+      expect(find.byIcon(Icons.content_copy), findsOneWidget);
     });
 
     testWidgets('shows error state', (tester) async {

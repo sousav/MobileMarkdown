@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile_markdown/main.dart';
@@ -152,10 +153,40 @@ void main() {
       expect(find.byIcon(Icons.brightness_auto), findsOneWidget);
     });
 
-    testWidgets('shows share button', (WidgetTester tester) async {
+    testWidgets('shows copy button', (WidgetTester tester) async {
       await tester.pumpWidget(buildViewer());
       await tester.pump();
-      expect(find.byIcon(Icons.share), findsOneWidget);
+      expect(find.byIcon(Icons.content_copy), findsOneWidget);
+    });
+
+    testWidgets('copies markdown to clipboard', (WidgetTester tester) async {
+      const content = '# Hello';
+      String? copiedText;
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+            if (call.method == 'Clipboard.setData') {
+              copiedText = (call.arguments as Map)['text'] as String?;
+            }
+            return null;
+          });
+
+      await tester.pumpWidget(
+        buildViewer(content: content, errorMessage: 'Copy test'),
+      );
+      await tester.pump();
+
+      final copyButton = tester
+          .widgetList<IconButton>(find.byType(IconButton))
+          .last;
+      copyButton.onPressed!.call();
+      await tester.pumpAndSettle();
+
+      expect(copiedText, content);
+      expect(find.text('Markdown copied to clipboard'), findsOneWidget);
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, null);
     });
 
     testWidgets('file name appears in app bar', (WidgetTester tester) async {

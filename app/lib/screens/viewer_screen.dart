@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:markdown_widget/markdown_widget.dart';
@@ -96,9 +94,12 @@ class _ViewerScreenState extends State<ViewerScreen> {
             onPressed: () => themeController.cycleTheme(),
           ),
           IconButton(
-            icon: const Icon(Icons.share, semanticLabel: 'Share file'),
-            tooltip: 'Share file',
-            onPressed: _shareFile,
+            icon: const Icon(
+              Icons.content_copy,
+              semanticLabel: 'Copy markdown',
+            ),
+            tooltip: 'Copy markdown',
+            onPressed: widget.markdownContent.isEmpty ? null : _copyMarkdown,
           ),
         ],
       ),
@@ -186,37 +187,16 @@ class _ViewerScreenState extends State<ViewerScreen> {
     _tocController.jumpToIndex(0);
   }
 
-  Future<void> _shareFile() async {
-    final path = widget.filePath;
-
-    if (path != null && await File(path).exists()) {
-      // Share the original file via platform share sheet
-      try {
-        if (Platform.isAndroid) {
-          // Use Android intent via method channel
-          const channel = MethodChannel('com.mobilemarkdown/share');
-          await channel.invokeMethod('shareFile', {'path': path});
-          return;
-        } else if (Platform.isIOS) {
-          const channel = MethodChannel('com.mobilemarkdown/share');
-          await channel.invokeMethod('shareFile', {'path': path});
-          return;
-        }
-      } on MissingPluginException {
-        // Platform channel not implemented; fall through to clipboard
-      } catch (_) {
-        // Fall through to clipboard fallback
-      }
+  Future<void> _copyMarkdown() async {
+    if (widget.markdownContent.isEmpty) {
+      return;
     }
 
-    // Fallback: copy content to clipboard
-    if (widget.markdownContent.isNotEmpty) {
-      await Clipboard.setData(ClipboardData(text: widget.markdownContent));
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Content copied to clipboard')),
-        );
-      }
+    await Clipboard.setData(ClipboardData(text: widget.markdownContent));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Markdown copied to clipboard')),
+      );
     }
   }
 }

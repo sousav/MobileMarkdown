@@ -23,11 +23,10 @@ Release only when every blocker is green.
   - iOS currently only built with `--no-codesign`.
   - Create the real keystore, certificates, provisioning profiles, and signing setup.
 
-- [ ] Implement outbound file sharing or de-scope the feature.
-  - `app/lib/screens/viewer_screen.dart` calls `MethodChannel('com.mobilemarkdown/share')`.
-  - There is no native implementation in `app/android/app/src/main/kotlin/com/mobilemarkdown/mobile_markdown/MainActivity.kt`.
-  - There is no native implementation in `app/ios/Runner/AppDelegate.swift`.
-  - Right now the app effectively falls back to clipboard copy.
+- [x] Implement outbound file sharing or de-scope the feature.
+  - De-scoped outbound native sharing in `app/lib/screens/viewer_screen.dart`.
+  - The viewer now exposes an explicit clipboard copy action instead of a broken share button.
+  - There is no longer a dead `MethodChannel('com.mobilemarkdown/share')` path without native implementations.
 
 - [ ] Resolve the offline/privacy/network contradiction.
   - `store/listing.md` says the app works fully offline with no internet permission.
@@ -71,7 +70,7 @@ Release only when every blocker is green.
 - [ ] Strengthen tests around critical paths.
   - Add real `FileService` coverage for file I/O, recents cleanup, and error handling.
   - Add share receive tests.
-  - Add tests for share fallback behavior.
+  - Add tests for clipboard copy behavior.
   - Add a real release-focused integration pass on device.
 
 ## Nice To Have
