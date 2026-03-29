@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -106,13 +108,15 @@ class _MobileMarkdownAppState extends State<MobileMarkdownApp> {
   }
 
   void _initShareReceiver() {
-    _shareReceiver.init((content, fileName) {
-      // Navigate to viewer when a file is received via share/intent
-      _navigatorKey.currentState?.pushNamed(
-        '/view',
-        arguments: {'content': content, 'fileName': fileName},
-      );
-    });
+    unawaited(
+      _shareReceiver.init((content, fileName) {
+        // Navigate to viewer when a file is received via share/intent
+        _navigatorKey.currentState?.pushNamed(
+          '/view',
+          arguments: {'content': content, 'fileName': fileName},
+        );
+      }),
+    );
   }
 
   Future<void> _loadThemePreference() async {

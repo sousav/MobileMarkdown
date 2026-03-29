@@ -65,9 +65,9 @@ Release only when every blocker is green.
   - Added the GitHub repository link to the About dialog in `app/lib/screens/home_screen.dart`.
 
 - [ ] Strengthen tests around critical paths.
-  - Add real `FileService` coverage for file I/O, recents cleanup, and error handling.
-  - Add share receive tests.
-  - Add tests for clipboard copy behavior.
+  - Added real `FileService` coverage for file I/O, recents cleanup, and error handling.
+  - Added share receive tests.
+  - Added tests for clipboard copy behavior.
   - Add a real release-focused integration pass on device.
 
 ## Nice To Have

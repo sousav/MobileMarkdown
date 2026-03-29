@@ -1,13 +1,19 @@
 import 'dart:async';
 
 import 'package:share_handler/share_handler.dart';
+
 import 'file_service.dart';
 
 /// Callback for when a shared file is received.
 typedef SharedFileCallback = void Function(String content, String fileName);
 
 class ShareReceiver {
-  final FileService _fileService = FileService();
+  ShareReceiver({FileService? fileService, ShareHandlerPlatform? platform})
+    : _fileService = fileService ?? FileService(),
+      _platform = platform ?? ShareHandlerPlatform.instance;
+
+  final FileService _fileService;
+  final ShareHandlerPlatform _platform;
   StreamSubscription<SharedMedia>? _subscription;
   SharedFileCallback? _onFileReceived;
 
@@ -15,25 +21,22 @@ class ShareReceiver {
   ///
   /// [onFileReceived] is called with the file content and name when
   /// a file arrives via share sheet or intent.
-  void init(SharedFileCallback onFileReceived) {
+  Future<void> init(SharedFileCallback onFileReceived) async {
     _onFileReceived = onFileReceived;
 
-    // Handle cold start: check for initial shared media
-    _handleInitialMedia();
+    _subscription = _platform.sharedMediaStream.listen(_handleSharedMedia);
 
-    // Handle warm resume: listen for incoming shares while running
-    _subscription = ShareHandlerPlatform.instance.sharedMediaStream.listen(
-      _handleSharedMedia,
-    );
+    // Handle cold start: check for initial shared media
+    await _handleInitialMedia();
   }
 
   Future<void> _handleInitialMedia() async {
     try {
-      final media = await ShareHandlerPlatform.instance.getInitialSharedMedia();
+      final media = await _platform.getInitialSharedMedia();
       if (media != null) {
         await _handleSharedMedia(media);
         // Reset to prevent duplicate handling
-        await ShareHandlerPlatform.instance.resetInitialSharedMedia();
+        await _platform.resetInitialSharedMedia();
       }
     } catch (_) {
       // Platform not available or no initial media — silently ignore

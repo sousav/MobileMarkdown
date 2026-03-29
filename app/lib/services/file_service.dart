@@ -85,12 +85,14 @@ class FileService {
     }
 
     try {
+      final bytes = await file.readAsBytes();
+
       // Try UTF-8 first
-      return await file.readAsString(encoding: utf8);
+      return utf8.decode(bytes);
     } on FormatException {
       // Fallback to Latin-1 encoding
       try {
-        return await file.readAsString(encoding: latin1);
+        return latin1.decode(await file.readAsBytes());
       } catch (_) {
         throw FileServiceException(
           "This file couldn't be read. It may not be a text file.",

@@ -1,9 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile_markdown/services/file_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const _recentFilesKey = 'recent_files';
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('RecentFile JSON serialization', () {
     test('toJson produces valid JSON', () {
       final file = RecentFile(
@@ -51,89 +59,168 @@ void main() {
     });
   });
 
-  group('RecentFile list serialization', () {
-    test('serializes and deserializes a list of files', () {
-      final files = [
-        RecentFile(
-          path: '/a.md',
-          name: 'a.md',
-          lastOpened: DateTime(2026, 2, 15),
-        ),
-        RecentFile(
-          path: '/b.md',
-          name: 'b.md',
-          lastOpened: DateTime(2026, 2, 14),
-        ),
-        RecentFile(
-          path: '/c.md',
-          name: 'c.md',
-          lastOpened: DateTime(2026, 2, 13),
-        ),
-      ];
+  group('FileService file I/O', () {
+    late Directory tempDir;
+    late FileService service;
 
-      final jsonString = json.encode(files.map((f) => f.toJson()).toList());
-      final decoded = (json.decode(jsonString) as List)
-          .map((item) => RecentFile.fromJson(item as Map<String, dynamic>))
-          .toList();
-
-      expect(decoded.length, 3);
-      expect(decoded[0].name, 'a.md');
-      expect(decoded[1].name, 'b.md');
-      expect(decoded[2].name, 'c.md');
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('mobile_markdown_file_');
+      service = FileService();
     });
 
-    test('FIFO eviction logic: list limited to 20 entries', () {
-      // Simulate adding 25 files
-      final files = List.generate(
-        25,
-        (i) => RecentFile(
-          path: '/file_$i.md',
-          name: 'file_$i.md',
-          lastOpened: DateTime(2026, 1, 1).add(Duration(hours: i)),
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        await tempDir.delete(recursive: true);
+      }
+    });
+
+    test('readFile reads UTF-8 content', () async {
+      final file = File('${tempDir.path}/utf8.md');
+      await file.writeAsString('# Hello, Markdown!');
+
+      final content = await service.readFile(file.path);
+
+      expect(content, '# Hello, Markdown!');
+    });
+
+    test('readFile falls back to Latin-1 when UTF-8 decoding fails', () async {
+      final file = File('${tempDir.path}/latin1.md');
+      await file.writeAsBytes([0x63, 0x61, 0x66, 0xE9]);
+
+      final content = await service.readFile(file.path);
+
+      expect(content, 'caf\xe9');
+    });
+
+    test('readFile throws notFound for missing files', () async {
+      expect(
+        () => service.readFile('${tempDir.path}/missing.md'),
+        throwsA(
+          isA<FileServiceException>()
+              .having((e) => e.type, 'type', FileServiceError.notFound)
+              .having(
+                (e) => e.message,
+                'message',
+                'This file could not be found',
+              ),
         ),
       );
+    });
 
-      // Simulate the eviction: keep only the last 20
-      final evicted = files.toList();
-      while (evicted.length > 20) {
-        evicted.removeLast();
+    test('getFileSize returns size for existing files', () async {
+      final file = File('${tempDir.path}/size.md');
+      await file.writeAsString('12345');
+
+      final fileSize = await service.getFileSize(file.path);
+
+      expect(fileSize, 5);
+    });
+
+    test('getFileSize returns zero for missing files', () async {
+      final fileSize = await service.getFileSize('${tempDir.path}/missing.md');
+
+      expect(fileSize, 0);
+    });
+  });
+
+  group('FileService recent files persistence', () {
+    late Directory tempDir;
+    late FileService service;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp(
+        'mobile_markdown_recents_',
+      );
+      service = FileService();
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        await tempDir.delete(recursive: true);
+      }
+    });
+
+    Future<List<Map<String, dynamic>>> loadRawRecentFiles() async {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_recentFilesKey);
+      if (raw == null || raw.isEmpty) {
+        return [];
       }
 
-      expect(evicted.length, 20);
-      // The oldest files (file_20 through file_24 would be at the end,
-      // but we remove from the end so file_20-24 are removed)
-      expect(evicted.first.name, 'file_0.md');
-      expect(evicted.last.name, 'file_19.md');
-    });
+      return (json.decode(raw) as List<dynamic>).cast<Map<String, dynamic>>();
+    }
 
-    test('deduplication: adding same path replaces existing entry', () {
-      final files = <RecentFile>[
-        RecentFile(
-          path: '/test.md',
-          name: 'test.md',
-          lastOpened: DateTime(2026, 2, 10),
-        ),
-        RecentFile(
-          path: '/other.md',
-          name: 'other.md',
-          lastOpened: DateTime(2026, 2, 9),
-        ),
-      ];
+    test(
+      'getRecentFiles removes stale and malformed entries and persists cleanup',
+      () async {
+        final olderFile = File('${tempDir.path}/older.md');
+        final newerFile = File('${tempDir.path}/newer.md');
+        await olderFile.writeAsString('older');
+        await newerFile.writeAsString('newer');
 
-      // Simulate adding /test.md again (newer timestamp)
-      final newFile = RecentFile(
-        path: '/test.md',
-        name: 'test.md',
-        lastOpened: DateTime(2026, 2, 15),
-      );
+        SharedPreferences.setMockInitialValues({
+          _recentFilesKey: json.encode([
+            {
+              'path': olderFile.path,
+              'name': 'older.md',
+              'lastOpened': '2026-01-01T12:00:00.000',
+            },
+            {
+              'path': '${tempDir.path}/missing.md',
+              'name': 'missing.md',
+              'lastOpened': '2026-01-02T12:00:00.000',
+            },
+            {'path': newerFile.path, 'name': 'broken.md'},
+            {
+              'path': newerFile.path,
+              'name': 'newer.md',
+              'lastOpened': '2026-01-03T12:00:00.000',
+            },
+          ]),
+        });
 
-      files.removeWhere((f) => f.path == newFile.path);
-      files.insert(0, newFile);
+        final recentFiles = await service.getRecentFiles();
+        final savedFiles = await loadRawRecentFiles();
 
-      expect(files.length, 2);
-      expect(files[0].path, '/test.md');
-      expect(files[0].lastOpened, DateTime(2026, 2, 15));
-      expect(files[1].path, '/other.md');
+        expect(recentFiles.map((file) => file.name).toList(), [
+          'newer.md',
+          'older.md',
+        ]);
+        expect(savedFiles.map((file) => file['name']).toList(), [
+          'newer.md',
+          'older.md',
+        ]);
+      },
+    );
+
+    test(
+      'saveRecentFile deduplicates entries and caps the list at 20',
+      () async {
+        for (var i = 0; i < 21; i++) {
+          await service.saveRecentFile('/file_$i.md', 'file_$i.md');
+        }
+        await service.saveRecentFile('/file_10.md', 'file_10.md');
+
+        final savedFiles = await loadRawRecentFiles();
+        final savedPaths = savedFiles.map((file) => file['path']).toList();
+
+        expect(savedFiles.length, 20);
+        expect(savedPaths.first, '/file_10.md');
+        expect(savedPaths.where((path) => path == '/file_10.md').length, 1);
+        expect(savedPaths.contains('/file_0.md'), isFalse);
+      },
+    );
+
+    test('removeRecentFile deletes the matching recent file entry', () async {
+      await service.saveRecentFile('/keep.md', 'keep.md');
+      await service.saveRecentFile('/remove.md', 'remove.md');
+
+      await service.removeRecentFile('/remove.md');
+
+      final savedFiles = await loadRawRecentFiles();
+
+      expect(savedFiles.length, 1);
+      expect(savedFiles.single['path'], '/keep.md');
     });
   });
 
