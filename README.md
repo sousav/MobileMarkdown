@@ -102,6 +102,9 @@ flutter build apk         # For sideloading (APK)
 
 **iOS:**
 ```bash
+# 1. Copy app/ios/Flutter/Signing.xcconfig.example to app/ios/Flutter/Signing.xcconfig
+# 2. Set MOBILEMARKDOWN_DEVELOPMENT_TEAM
+# 3. If you use manual signing, set the Runner and ShareExtension profile specifiers too
 cd app
 flutter build ipa --no-codesign    # Unsigned (for manual signing)
 flutter build ipa                   # Signed (requires provisioning profile)

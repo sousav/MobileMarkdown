@@ -1,0 +1,11 @@
+// Copy to Signing.xcconfig and fill in your local signing values.
+// Never commit Signing.xcconfig.
+MOBILEMARKDOWN_DEVELOPMENT_TEAM = YOUR_TEAM_ID
+
+// Leave Automatic for the simplest setup.
+MOBILEMARKDOWN_CODE_SIGN_STYLE = Automatic
+
+// Optional manual-signing overrides:
+// MOBILEMARKDOWN_CODE_SIGN_STYLE = Manual
+// MOBILEMARKDOWN_RUNNER_PROFILE_SPECIFIER = MobileMarkdown App Store
+// MOBILEMARKDOWN_SHARE_EXTENSION_PROFILE_SPECIFIER = MobileMarkdown ShareExtension App Store
