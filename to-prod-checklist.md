@@ -28,11 +28,10 @@ Release only when every blocker is green.
   - The viewer now exposes an explicit clipboard copy action instead of a broken share button.
   - There is no longer a dead `MethodChannel('com.mobilemarkdown/share')` path without native implementations.
 
-- [ ] Resolve the offline/privacy/network contradiction.
-  - `store/listing.md` says the app works fully offline with no internet permission.
-  - `docs/planning/03-feature-spec-v1.md` says remote images should load.
-  - `app/android/app/src/main/AndroidManifest.xml` does not declare release `INTERNET` permission.
-  - Pick one product truth and align code, docs, and store copy.
+- [x] Resolve the offline/privacy/network contradiction.
+  - Kept the offline-first product truth: no release `INTERNET` permission and no remote image fetching.
+  - `app/lib/theme/markdown_theme.dart` now shows an offline placeholder for remote image URLs.
+  - `store/listing.md` and `docs/planning/03-feature-spec-v1.md` now match that offline behavior.
 
 - [ ] Run real-device acceptance testing for the core flows.
   - Android phone: picker open, direct file open, share receive, link opening, recents cleanup, theme persistence, large-file warning.

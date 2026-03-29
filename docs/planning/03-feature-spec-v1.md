@@ -58,7 +58,7 @@ This app is a **viewer**, not an editor. It does for `.md` files what a PDF read
 | Task lists (checkboxes) | Yes | GFM, display-only (not interactive) |
 | Tables | Yes | GFM, horizontally scrollable if wide |
 | Links | Yes | Tappable, opens in browser |
-| Images | Yes | Remote URLs loaded, local paths resolved |
+| Images | Best effort | Remote URLs are blocked offline; unsupported sources show placeholders |
 | Horizontal rules | Yes | |
 | Line breaks | Yes | |
 | HTML | Best effort | Strip tags or render simple HTML |
@@ -72,7 +72,7 @@ This app is a **viewer**, not an editor. It does for `.md` files what a PDF read
 - Typography: System font, proper line height, paragraph spacing
 - Code blocks: Monospace font, slight background tint, rounded corners
 - Tables: Bordered, alternating row colors, horizontally scrollable
-- Images: Scaled to fit width, tappable to view full-size (stretch goal)
+- Images: Best effort rendering for supported sources; remote URLs show an offline placeholder
 - Links: Distinct color, underlined, tappable
 
 ---
@@ -132,7 +132,7 @@ This app is a **viewer**, not an editor. It does for `.md` files what a PDF read
   - Back button (left)
   - File name as title (center, truncated with ellipsis)
   - Theme toggle (right, icon button)
-  - Share button (right, icon button)
+  - Copy markdown button (right, icon button)
 - **Body:**
   - Full-width rendered markdown
   - Scrollable (natural platform scroll physics)
@@ -142,7 +142,7 @@ This app is a **viewer**, not an editor. It does for `.md` files what a PDF read
   - Disappears when near top
 
 ### Actions
-- **Share:** Share the original .md file to other apps
+- **Copy markdown:** Copy the rendered file contents to the clipboard
 - **Theme toggle:** Switch between light/dark/system
 
 ---
@@ -178,7 +178,7 @@ This app is a **viewer**, not an editor. It does for `.md` files what a PDF read
 | Encoding error | "This file couldn't be read. It may not be a text file." | Show "Open Another File" button |
 | Empty file | "This file is empty" | Show "Open Another File" button |
 | Invalid markdown | (Never shown - render best effort) | Always attempt to render |
-| Network error (remote images) | Show broken image placeholder | Silently fail, show icon |
+| Remote image URL | Show offline image placeholder | Never fetch over network |
 
 ---
 
@@ -199,7 +199,7 @@ This app is a **viewer**, not an editor. It does for `.md` files what a PDF read
 ## Privacy
 
 - **No analytics.** Zero tracking, zero telemetry.
-- **No network calls** except loading remote images referenced in markdown files.
+- **No network calls.** Remote image URLs are intentionally not fetched.
 - **No data collection.** No accounts, no server, nothing leaves the device.
 - **Recent files list** is stored locally on device only.
 - **Privacy policy:** "This app does not collect, store, or transmit any personal data."

@@ -15,7 +15,7 @@ FEATURES:
 - Open .md files from your file manager, share sheet, or the in-app file picker
 - Beautiful rendering of CommonMark and GitHub Flavored Markdown (GFM)
 - Syntax highlighting for 30+ programming languages
-- Tables, checkboxes, images, blockquotes, and horizontal rules
+- Tables, checkboxes, best-effort images, blockquotes, and horizontal rules
 - Light, Dark, and System theme modes
 - Recent files list for quick access
 - Tappable links open in your default browser
@@ -30,6 +30,7 @@ PRIVACY:
 - No analytics or tracking
 - No ads
 - No internet permission (works fully offline)
+- Remote web images are not fetched
 - Your files stay on your device
 
 SUPPORTED FILE TYPES:

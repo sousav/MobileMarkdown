@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:mobile_markdown/main.dart';
 import 'package:mobile_markdown/screens/viewer_screen.dart';
 import 'package:mobile_markdown/widgets/empty_state.dart';
@@ -12,6 +13,7 @@ void main() {
   setUp(() {
     // Set up SharedPreferences mock for tests
     SharedPreferences.setMockInitialValues({});
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
   });
 
   group('HomeScreen', () {
@@ -187,6 +189,26 @@ void main() {
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(SystemChannels.platform, null);
+    });
+
+    testWidgets('shows offline placeholder for remote images', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildViewer(
+          content: '![Remote Diagram](https://example.com/diagram.png)',
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text('Remote Diagram'), findsOneWidget);
+      expect(
+        find.text(
+          'Remote image URLs are not fetched so the app stays fully offline.',
+        ),
+        findsOneWidget,
+      );
+      await tester.pump(const Duration(milliseconds: 600));
     });
 
     testWidgets('file name appears in app bar', (WidgetTester tester) async {
