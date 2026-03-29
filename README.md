@@ -120,12 +120,12 @@ MobileMarkdown/
       main.dart                 # App entry, ThemeController, routing
       screens/
         home_screen.dart        # File picker, recent files, About dialog
-        viewer_screen.dart      # Markdown rendering, share, error states
+        viewer_screen.dart      # Markdown rendering, copy, error states
       services/
         file_service.dart       # File I/O, recent files (SharedPrefs)
         share_receiver.dart     # Cold/warm start intent handling
       widgets/
-        empty_state.dart        # "No recent files" placeholder
+        empty_state.dart        # "No files yet" placeholder
         recent_file_tile.dart   # Dismissible recent file entry
       theme/
         app_theme.dart          # Material 3 light/dark ThemeData

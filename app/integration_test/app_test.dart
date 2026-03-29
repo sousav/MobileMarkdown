@@ -30,12 +30,14 @@ void main() {
       expect(find.byIcon(Icons.info_outline), findsOneWidget);
     });
 
-    testWidgets('shows empty state when no recent files', (tester) async {
+    testWidgets('shows empty state when no files are available', (
+      tester,
+    ) async {
       await tester.pumpWidget(const MobileMarkdownApp());
       await tester.pump(const Duration(milliseconds: 500));
 
       // Empty state message
-      expect(find.text('No recent files'), findsOneWidget);
+      expect(find.text('No files yet'), findsOneWidget);
     });
   });
 

@@ -62,8 +62,6 @@ Release only when every blocker is green.
   - The app mostly handles markdown, text files, and shared text.
 
 - [ ] Fix known doc and UX drift.
-  - `app/integration_test/app_test.dart` expects `No recent files`.
-  - `app/lib/widgets/empty_state.dart` renders `No files yet`.
   - `app/README.md` is still the default Flutter starter README.
   - The About dialog in `app/lib/screens/home_screen.dart` still lacks the planned GitHub link.
 
