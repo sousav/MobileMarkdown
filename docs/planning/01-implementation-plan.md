@@ -86,7 +86,7 @@
 ### Tasks
 - [ ] Configure Android `AndroidManifest.xml` with intent filters for:
   - `ACTION_VIEW` with `text/markdown` and `text/x-markdown` MIME types
-  - `ACTION_VIEW` with `.md` file extension pattern
+  - `ACTION_VIEW` with `.md` and `.markdown` file extension patterns
   - `ACTION_SEND` for receiving shared text/files
 - [ ] Configure iOS `Info.plist` with:
   - `CFBundleDocumentTypes` for markdown files

@@ -134,6 +134,7 @@ For Flutter, the Dart `markdown` package handles parsing. It's mature, CommonMar
     <data android:mimeType="text/markdown" />
     <data android:mimeType="text/x-markdown" />
     <data android:pathPattern=".*\\.md" />
+    <data android:pathPattern=".*\\.markdown" />
     <data android:scheme="content" />
     <data android:scheme="file" />
 </intent-filter>

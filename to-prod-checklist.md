@@ -54,9 +54,9 @@ Release only when every blocker is green.
   - Flutter app title: `app/lib/main.dart`
   - ASO recommendation: `docs/planning/02-app-store-strategy.md`
 
-- [ ] Expand Android file association coverage for `.markdown`.
-  - Current fallback filter only matches `.md` in `app/android/app/src/main/AndroidManifest.xml`.
-  - Docs and picker behavior promise both `.md` and `.markdown`.
+- [x] Expand Android file association coverage for `.markdown`.
+  - Added `.markdown` to the generic MIME fallback filter in `app/android/app/src/main/AndroidManifest.xml`.
+  - The Android manifest and supporting docs now align on both `.md` and `.markdown`.
 
 - [ ] Narrow the iOS share extension to supported content only.
   - `app/ios/ShareExtension/Info.plist` currently advertises images, movies, URLs, and generic data.

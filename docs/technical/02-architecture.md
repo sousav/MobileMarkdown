@@ -174,7 +174,7 @@ MaterialApp(
 Add intent filters to the main activity:
 
 ```xml
-<!-- Open .md files from file managers -->
+<!-- Open .md and .markdown files from file managers -->
 <intent-filter>
     <action android:name="android.intent.action.VIEW" />
     <category android:name="android.intent.category.DEFAULT" />
@@ -185,7 +185,7 @@ Add intent filters to the main activity:
     <data android:mimeType="text/x-markdown" />
 </intent-filter>
 
-<!-- Catch .md extension even with generic MIME -->
+<!-- Catch .md and .markdown extensions even with generic MIME -->
 <intent-filter>
     <action android:name="android.intent.action.VIEW" />
     <category android:name="android.intent.category.DEFAULT" />
@@ -193,6 +193,7 @@ Add intent filters to the main activity:
     <data android:scheme="file" />
     <data android:mimeType="*/*" />
     <data android:pathPattern=".*\\.md" />
+    <data android:pathPattern=".*\\.markdown" />
 </intent-filter>
 
 <!-- Receive shared text/files -->
