@@ -1,0 +1,43 @@
+{
+  "name": "mobile-markdown",
+  "private": true,
+  "scripts": {
+    "doctor": "cd app && flutter doctor -v",
+    "get": "cd app && flutter pub get",
+    "upgrade": "cd app && flutter pub upgrade",
+    "outdated": "cd app && flutter pub outdated",
+
+    "analyze": "cd app && flutter analyze --fatal-infos",
+    "format": "cd app && dart format --set-exit-if-changed lib/ test/",
+    "format:fix": "cd app && dart format lib/ test/",
+    "test": "cd app && flutter test",
+    "test:coverage": "cd app && flutter test --coverage",
+    "lint": "bun run analyze && bun run format && bun run test",
+
+    "run:ios": "cd app && flutter run -d iPhone",
+    "run:android": "cd app && flutter run -d emulator",
+    "run:web": "cd app && flutter run -d chrome --web-port 8080",
+    "run:macos": "cd app && flutter run -d macos",
+
+    "sim:boot": "xcrun simctl boot 'iPhone 17 Pro' 2>/dev/null; open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app",
+    "sim:shutdown": "xcrun simctl shutdown all",
+    "sim:list": "xcrun simctl list devices available",
+
+    "emu:boot": "/opt/homebrew/share/android-commandlinetools/emulator/emulator -avd Pixel_8 -gpu swiftshader_indirect &",
+    "emu:shutdown": "/opt/homebrew/share/android-commandlinetools/platform-tools/adb emu kill",
+    "emu:list": "/opt/homebrew/share/android-commandlinetools/emulator/emulator -list-avds",
+
+    "build:apk": "cd app && flutter build apk --release",
+    "build:aab": "cd app && flutter build appbundle --release",
+    "build:ios": "cd app && flutter build ios --release",
+    "build:web": "cd app && flutter build web",
+
+    "clean": "cd app && flutter clean && flutter pub get",
+    "clean:ios": "cd app/ios && rm -rf Pods Podfile.lock && pod install",
+    "clean:all": "cd app && flutter clean && flutter pub get && cd ios && rm -rf Pods Podfile.lock && pod install",
+
+    "icons": "cd app && dart run flutter_launcher_icons",
+    "splash": "cd app && dart run flutter_native_splash:create",
+    "gen:icon": "python3 scripts/generate_icon.py"
+  }
+}

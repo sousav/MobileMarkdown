@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,9 +7,16 @@ import 'screens/home_screen.dart';
 import 'screens/viewer_screen.dart';
 import 'services/share_receiver.dart';
 
+bool get _isMobile =>
+    !kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS);
+
 void main() {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  if (_isMobile) {
+    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  }
   runApp(const MobileMarkdownApp());
 }
 
@@ -86,7 +94,9 @@ class _MobileMarkdownAppState extends State<MobileMarkdownApp> {
   void initState() {
     super.initState();
     _loadThemePreference();
-    _initShareReceiver();
+    if (_isMobile) {
+      _initShareReceiver();
+    }
   }
 
   @override
@@ -113,7 +123,9 @@ class _MobileMarkdownAppState extends State<MobileMarkdownApp> {
         _themeMode = _themeModeFromString(saved);
       });
     }
-    FlutterNativeSplash.remove();
+    if (_isMobile) {
+      FlutterNativeSplash.remove();
+    }
   }
 
   Future<void> _setThemeMode(ThemeMode mode) async {
