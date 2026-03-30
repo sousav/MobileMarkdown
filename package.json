@@ -35,6 +35,7 @@
 
     "icons": "cd app && dart run flutter_launcher_icons",
     "splash": "cd app && dart run flutter_native_splash:create",
-    "gen:icon": "python3 scripts/generate_icon.py"
+    "gen:icon": "python3 scripts/generate_icon.py",
+    "shot:play": "python3 scripts/capture_play_screenshot.py"
   }
 }
