@@ -16,8 +16,6 @@
 
     "run:ios": "cd app && flutter run -d iPhone",
     "run:android": "cd app && flutter run -d emulator",
-    "run:web": "cd app && flutter run -d chrome --web-port 8080",
-    "run:macos": "cd app && flutter run -d macos",
 
     "sim:boot": "xcrun simctl boot 'iPhone 17 Pro' 2>/dev/null; open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app",
     "sim:shutdown": "xcrun simctl shutdown all",
@@ -30,7 +28,6 @@
     "build:apk": "cd app && flutter build apk --release",
     "build:aab": "cd app && flutter build appbundle --release",
     "build:ios": "cd app && flutter build ios --release",
-    "build:web": "cd app && flutter build web",
 
     "clean": "cd app && flutter clean && flutter pub get",
     "clean:ios": "cd app/ios && rm -rf Pods Podfile.lock && pod install",

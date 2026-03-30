@@ -21,7 +21,7 @@ Run these from the `app/` directory:
 flutter pub get
 flutter run
 flutter test
-flutter test integration_test/app_test.dart -d macos
+flutter test integration_test/app_test.dart -d <device-id>
 flutter build appbundle --release
 flutter build ios --release --no-codesign
 ```

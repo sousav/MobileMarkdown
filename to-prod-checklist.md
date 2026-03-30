@@ -9,7 +9,7 @@ Release only when every blocker is green.
 - `dart format --set-exit-if-changed lib/ test/ integration_test/`: passes
 - `flutter build ios --release --no-codesign`: passes
 - `flutter build appbundle --release`: passes
-- `flutter test integration_test -d macos`: fails 1 test
+- `flutter test integration_test -d <device>`: pending a fresh run on a real mobile device
 - `git status`: worktree is not clean; there are staged platform changes
 
 ## Blockers
