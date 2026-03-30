@@ -39,6 +39,7 @@ MobileMarkdown does for `.md` files what a PDF reader does for PDFs: open them, 
 | [App Store Strategy](docs/planning/02-app-store-strategy.md) | ASO, organic growth, distribution plan |
 | [Feature Spec v1](docs/planning/03-feature-spec-v1.md) | Detailed feature specification with error handling and performance targets |
 | [Android Real-Device Acceptance](docs/release/android-real-device-acceptance.md) | Manual runbook for validating the Android release build on a phone |
+| [Privacy Policy Source](privacy.html) | Public privacy policy page intended for GitHub Pages and store submission |
 
 ## Key Findings
 
