@@ -49,11 +49,9 @@ Release only when every blocker is green.
 
 ## High Priority
 
-- [ ] Normalize the product name and ASO direction.
-  - Android label: `app/android/app/src/main/AndroidManifest.xml`
-  - iOS display name: `app/ios/Runner/Info.plist`
-  - Flutter app title: `app/lib/main.dart`
-  - ASO recommendation: `docs/planning/02-app-store-strategy.md`
+- [x] Normalize the product name and ASO direction.
+  - Android label, iOS display name, and Flutter app title now align on `MobileMarkdown`.
+  - ASO direction in `docs/planning/02-app-store-strategy.md` now keeps `MobileMarkdown` as the primary name and moves search intent into subtitle/keywords.
 
 - [x] Expand Android file association coverage for `.markdown`.
   - Added `.markdown` to the generic MIME fallback filter in `app/android/app/src/main/AndroidManifest.xml`.

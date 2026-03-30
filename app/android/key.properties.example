@@ -1,13 +1,21 @@
 # Android signing configuration for release builds.
 # Copy this file to key.properties and fill in your values.
 # NEVER commit key.properties to version control.
+# storeFile may be absolute or relative to app/android/.
+# You can also set these environment variables instead of using key.properties:
+#   MOBILEMARKDOWN_UPLOAD_STORE_FILE
+#   MOBILEMARKDOWN_UPLOAD_STORE_PASSWORD
+#   MOBILEMARKDOWN_UPLOAD_KEY_ALIAS
+#   MOBILEMARKDOWN_UPLOAD_KEY_PASSWORD
+# For local release-like installs without a real upload keystore, set:
+#   MOBILEMARKDOWN_ALLOW_DEBUG_RELEASE_SIGNING=true
 #
 # To generate a keystore:
-#   keytool -genkey -v -keystore ~/mobilemarkdown-upload.jks \
-#     -keyalg RSA -keysize 2048 -validity 10000 \
+#   keytool -genkeypair -v -keystore upload-keystore.jks \
+#     -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 \
 #     -alias upload
 #
 storePassword=YOUR_STORE_PASSWORD
 keyPassword=YOUR_KEY_PASSWORD
 keyAlias=upload
-storeFile=/path/to/your/mobilemarkdown-upload.jks
+storeFile=upload-keystore.jks

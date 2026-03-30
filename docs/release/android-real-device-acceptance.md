@@ -41,7 +41,8 @@ flutter install --release -d <device-id>
 Notes:
 
 - The release APK is written to `app/build/app/outputs/flutter-apk/app-release.apk`.
-- Until `app/android/key.properties` exists, local release installs use the debug signing fallback in `app/android/app/build.gradle.kts`.
+- Real release signing now requires `app/android/key.properties` or the `MOBILEMARKDOWN_UPLOAD_*` environment variables.
+- For local release-like installs before the real keystore exists, set `MOBILEMARKDOWN_ALLOW_DEBUG_RELEASE_SIGNING=true`.
 
 ## Acceptance Matrix
 

@@ -93,12 +93,16 @@ flutter test integration_test             # Integration tests (requires device)
 
 **Android:**
 ```bash
-# 1. Copy app/android/key.properties.example to app/android/key.properties
-# 2. Fill in your keystore credentials
-# 3. Build:
+# 1. Create app/android/key.properties from the example
+#    or export the MOBILEMARKDOWN_UPLOAD_* environment variables
+# 2. Fill in your upload keystore path, alias, and passwords
+# 3. Build a signed bundle:
 cd app
-flutter build appbundle   # For Play Store (AAB)
-flutter build apk         # For sideloading (APK)
+flutter build appbundle --release   # For Play Store (AAB)
+flutter build apk --release         # For sideloading (APK)
+
+# Optional: local release-like APK build without a real upload keystore
+MOBILEMARKDOWN_ALLOW_DEBUG_RELEASE_SIGNING=true flutter build apk --release
 ```
 
 **iOS:**

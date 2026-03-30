@@ -9,13 +9,17 @@
 ## 1. App Store Optimization (ASO)
 
 ### App Name
-**Primary:** "Markdown Viewer" or "MD Viewer"
-**Rationale:** Exact-match for the primary search term. Simple, descriptive, memorable.
+**Primary:** "MobileMarkdown"
+**Rationale:** Keep one consistent brand across Android, iOS, GitHub, store copy, and in-app UI. Use subtitle and keyword fields to capture exact-match search intent instead of fragmenting the product name.
+
+**Store-facing support copy:**
+- Subtitle / promo text: "Markdown Viewer for .md Files"
+- Keyword focus: markdown viewer, md viewer, markdown reader, open md file
 
 **Alternatives considered:**
-- "ReadMD" - clever but less searchable
-- "MarkView" - less obvious
-- "Simple Markdown Viewer" - too long for some store displays
+- "Markdown Viewer" - stronger keyword match, but weaker long-term branding
+- "MD Viewer" - short, but generic
+- "Simple Markdown Viewer" - descriptive, but too long for some store displays
 
 ### Keywords (Apple App Store)
 
