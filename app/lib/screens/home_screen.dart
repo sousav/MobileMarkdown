@@ -37,10 +37,11 @@ class _HomeScreenState extends State<HomeScreen> {
       final result = await _fileService.pickFile();
       if (result == null || result.files.isEmpty) return;
 
-      final filePath = result.files.single.path;
+      final pickedFile = result.files.single;
+      final filePath = pickedFile.identifier ?? pickedFile.path;
       if (filePath == null) return;
 
-      await _openFile(filePath);
+      await _openFile(filePath, fileName: pickedFile.name);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -50,10 +51,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _openFile(String path) async {
-    final fileName = path.split('/').last;
+  Future<void> _openFile(String path, {String? fileName}) async {
+    final uri = Uri.tryParse(path);
+    final resolvedFileName =
+        fileName ??
+        ((uri != null && uri.pathSegments.isNotEmpty)
+            ? uri.pathSegments.last
+            : path.split('/').last);
 
     try {
+      await _fileService.persistUriPermission(path);
+
       // Check file size
       final fileSize = await _fileService.getFileSize(path);
       if (fileSize > maxFileSizeBytes && mounted) {
@@ -80,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
 
       final content = await _fileService.readFile(path);
-      await _fileService.saveRecentFile(path, fileName);
+      await _fileService.saveRecentFile(path, resolvedFileName);
 
       if (mounted) {
         await Navigator.pushNamed(
@@ -88,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
           '/view',
           arguments: {
             'content': content,
-            'fileName': fileName,
+            'fileName': resolvedFileName,
             'filePath': path,
           },
         );

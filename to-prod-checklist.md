@@ -34,6 +34,9 @@ Release only when every blocker is green.
   - `store/listing.md` and `docs/planning/03-feature-spec-v1.md` now match that offline behavior.
 
 - [ ] Run real-device acceptance testing for the core flows.
+  - Runbook: `docs/release/android-real-device-acceptance.md`.
+  - Android integration smoke passed on `Saga` (Android 14) via `flutter test integration_test/app_test.dart -d O1E1XT232302499`.
+  - Android manual acceptance passed on `Saga` for picker open, direct file open, share receive, link opening, recents cleanup, theme persistence, and large-file warning.
   - Android phone: picker open, direct file open, share receive, link opening, recents cleanup, theme persistence, large-file warning.
   - iPhone: picker open, Files open-in flow, share receive, link opening, recents cleanup, theme persistence, large-file warning.
   - Confirm the new iOS share extension works end to end.

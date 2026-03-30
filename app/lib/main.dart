@@ -4,10 +4,12 @@ import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'services/file_open_receiver.dart';
+import 'services/share_receiver.dart';
 import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
 import 'screens/viewer_screen.dart';
-import 'services/share_receiver.dart';
 
 bool get _isMobile =>
     !kIsWeb &&
@@ -88,6 +90,7 @@ class MobileMarkdownApp extends StatefulWidget {
 class _MobileMarkdownAppState extends State<MobileMarkdownApp> {
   ThemeMode _themeMode = ThemeMode.system;
   final ShareReceiver _shareReceiver = ShareReceiver();
+  final FileOpenReceiver _fileOpenReceiver = FileOpenReceiver();
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   static const _themePrefKey = 'theme_mode';
@@ -103,20 +106,21 @@ class _MobileMarkdownAppState extends State<MobileMarkdownApp> {
 
   @override
   void dispose() {
+    _fileOpenReceiver.dispose();
     _shareReceiver.dispose();
     super.dispose();
   }
 
   void _initShareReceiver() {
-    unawaited(
-      _shareReceiver.init((content, fileName) {
-        // Navigate to viewer when a file is received via share/intent
-        _navigatorKey.currentState?.pushNamed(
-          '/view',
-          arguments: {'content': content, 'fileName': fileName},
-        );
-      }),
-    );
+    void openViewer(String content, String fileName) {
+      _navigatorKey.currentState?.pushNamed(
+        '/view',
+        arguments: {'content': content, 'fileName': fileName},
+      );
+    }
+
+    unawaited(_shareReceiver.init(openViewer));
+    unawaited(_fileOpenReceiver.init(openViewer));
   }
 
   Future<void> _loadThemePreference() async {
